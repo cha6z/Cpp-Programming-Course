@@ -1,425 +1,1045 @@
-\documentclass{article}
-\usepackage{graphicx} % Required for inserting images
-\usepackage{listings}
+\documentclass[10pt]{report}
+
+% ============================================================
+% PAGE SETUP
+% ============================================================
+\usepackage[a4paper, margin=1in]{geometry}
+
+% ============================================================
+% CORE PACKAGES
+% ============================================================
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[australian]{babel}
+\usepackage{textcomp}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{longtable}
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\usepackage{tikz}
 \usepackage{xcolor}
-\usepackage{float} % For [H] float placement
+\usepackage[table]{xcolor}
+
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
 \usepackage{listings}
-\definecolor{codebg}{rgb}{0.97,0.97,0.97}
-\definecolor{codekw}{rgb}{0.15,0.15,0.60}
-\definecolor{codestr}{rgb}{0.60,0.10,0.10}
-\definecolor{codecom}{rgb}{0.10,0.50,0.10}
-\definecolor{codenm}{rgb}{0.35,0.35,0.35}
+\usepackage{needspace}
 
-\lstdefinestyle{vscode}{
-  backgroundcolor=\color{codebg},
-  basicstyle=\ttfamily\small,
-  numbers=left,
-  numberstyle=\tiny\color{codenm},
-  frame=single,
-  rulecolor=\color{codenm},
-  breaklines=true,
-  tabsize=2,
-  showstringspaces=false,
-  keywordstyle=\bfseries\color{codekw},
-  commentstyle=\itshape\color{codecom},
-  stringstyle=\color{codestr}
+% ============================================================
+% HYPERLINKS
+% ============================================================
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+]{hyperref}
+
+% ============================================================
+% SECTION FORMATTING
+% ============================================================
+\renewcommand{\thesection}{\Roman{section}}
+\renewcommand{\thesubsection}{\alph{subsection}.}
+
+\titleformat{\section}
+  {\centering\normalfont\Large\bfseries}
+  {\thesection.}
+  {0.5em}
+  {}
+
+\titleformat{\subsection}
+  {\normalfont\bfseries\normalsize}
+  {\thesubsection}
+  {0.5em}
+  {}
+
+\titlespacing*{\section}
+{0pt}{1.0ex plus 0.2ex minus 0.2ex}{0.8ex}
+
+\titlespacing*{\subsection}
+{0pt}{0.8ex plus 0.2ex minus 0.2ex}{0.5ex}
+
+% ============================================================
+% CAPTION FORMATTING
+% ============================================================
+\captionsetup[table]{
+    position=above,
+    justification=centering,
+    singlelinecheck=false,
+    font=small,
+    labelfont=bf,
+    textfont=it,
+    labelsep=period,
+    skip=4pt
 }
 
-\lstset{style=vscode}
+\captionsetup[figure]{
+    position=below,
+    justification=centering,
+    singlelinecheck=false,
+    font=small,
+    labelfont=bf,
+    textfont=it,
+    labelsep=period,
+    skip=4pt
+}
 
+\captionsetup[lstlisting]{
+    justification=raggedright,
+    singlelinecheck=false,
+    font=small,
+    labelfont=bf,
+    skip=2pt
+}
 
-\title{C++ Programming Fundamentals}
-\author{Chabod Masere}
-\date{February 2026}
+% ============================================================
+% HEADER / FOOTER
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{C++ Programming Notes}
+\fancyhead[R]{Personal Learning}
+\fancyfoot[C]{C++ Language Learning Notes}
+\fancyfoot[R]{\thepage}
 
+% ============================================================
+% COLOURS
+% ============================================================
+\definecolor{CoverBlue}{RGB}{0,32,96}
+\definecolor{codebg}{RGB}{245,245,244}
+\definecolor{codeframe}{RGB}{180,180,180}
+\definecolor{codeblue}{RGB}{0,70,180}
+\definecolor{codegreen}{RGB}{0,120,60}
+\definecolor{codepurple}{RGB}{120,40,140}
+\definecolor{codenumbers}{RGB}{120,120,120}
+\definecolor{codered}{RGB}{160,30,30}
+
+% ============================================================
+% C++ CODE STYLE
+% ============================================================
+\lstdefinestyle{CppStyle}{
+    language=C++,
+    basicstyle=\ttfamily\small,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    framerule=0.25pt,
+    framesep=4pt,
+    breaklines=true,
+    breakatwhitespace=false,
+    showstringspaces=false,
+    tabsize=4,
+    numbers=left,
+    numberstyle=\tiny\color{codenumbers},
+    numbersep=6pt,
+    xleftmargin=0pt,
+    xrightmargin=0pt,
+    framexleftmargin=18pt,
+    framexrightmargin=4pt,
+    framextopmargin=4pt,
+    framexbottommargin=4pt,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codered},
+    identifierstyle=\color{black},
+    captionpos=t,
+    aboveskip=6pt,
+    belowskip=6pt,
+    linewidth=\linewidth,
+    columns=fullflexible,
+    keepspaces=true
+}
+
+\lstset{style=CppStyle}
+
+% ============================================================
+% CUSTOM NOTE BOXES
+% ============================================================
+\newcommand{\conceptbox}[1]{
+    \vspace{0.5em}
+    \noindent
+    \fcolorbox{CoverBlue}{blue!5}{
+        \begin{minipage}{0.96\linewidth}
+        #1
+        \end{minipage}
+    }
+    \vspace{0.5em}
+}
+
+\newcommand{\important}[1]{
+    \vspace{0.5em}
+    \noindent
+    \fcolorbox{red!60!black}{red!5}{
+        \begin{minipage}{0.96\linewidth}
+        \textbf{Important:} #1
+        \end{minipage}
+    }
+    \vspace{0.5em}
+}
+
+\newcommand{\examplebox}[1]{
+    \vspace{0.5em}
+    \noindent
+    \fcolorbox{CoverBlue}{blue!4}{
+        \begin{minipage}{0.96\linewidth}
+        \textbf{Example:} #1
+        \end{minipage}
+    }
+    \vspace{0.5em}
+}
+
+% ============================================================
+% DOCUMENT START
+% ============================================================
 \begin{document}
-\begin{figure}
-    \centering
-    \includegraphics[width=0.35\textwidth]{images/microsoft.png}
-    \label{fig:myimage}
-\end{figure}
-\maketitle
 
-\section{Introduction to C++ Syntax and Structure}
-\subsection{The Anatomy of "Hello, World!"}
+% ============================================================
+% TITLE PAGE
+% ============================================================
+\begin{titlepage}
+\thispagestyle{empty}
 
-The "Hello, World!" is synonymous in the programming world and is most often the first step for any new programmer, including myself. Despite its simplicity, it ultimately lays the groundwork for understanding the fundamental structure of C++ programs. The program's task is relatively singular: it outputs "Hello, World!" to the console. This is the surface of the building blocks of C++ projects.
+\begin{tikzpicture}[remember picture,overlay]
+    \draw[CoverBlue, line width=1.2pt]
+        ([xshift=1.3cm,yshift=-1.3cm]current page.north west)
+        rectangle
+        ([xshift=-1.3cm,yshift=1.3cm]current page.south east);
+\end{tikzpicture}
 
+\centering
 
-Snippet of the code: 
+\vspace*{1.2cm}
 
-\lstinputlisting[language=C++]{Code Overlay/helloworld.cpp}
+% ------------------------------------------------------------
+% TITLE BLOCK
+% ------------------------------------------------------------
+{\fontsize{30}{36}\selectfont\bfseries
+C++ Programming Language
+\par}
 
-\newpage
-\subsubsection{Core Components of a C++ Program}
-\textbf{Preprocessor Directive \texttt{\#include <iostream>}}
+\vspace{0.35cm}
 
+{\fontsize{19}{23}\selectfont\bfseries
+Personal Learning Notes
+\par}
 
-The line \texttt{\#include <iostream>} instructs the compiler to include the standard input-output stream library, which provides essential functions for displaying data. The directive is analogous to borrowing tools from a library for use within the project.
+\vfill
 
-\subsubsection{Main Function int main():}
-Every C++ program revolves around the main function. It acts as the entry point, where the program begins execution. Without it, the C++ application remains inactive. 
+% ------------------------------------------------------------
+% DESCRIPTION BLOCK
+% ------------------------------------------------------------
+\begin{minipage}{0.78\textwidth}
+\centering
+{\fontsize{13}{17}\selectfont\itshape
+A structured notebook for learning C++ syntax, program structure,
+compilation, functions, data types, memory concepts, object-oriented
+programming, and applied software engineering.
+\par}
+\end{minipage}
 
-\subsubsection{Output Operation (\texttt{std::cout << "Hello, World!" << std::endl;})}
+\vfill
 
-This is the line that sends the output to the console. This line is pretty much where the "magic" happens. It displays "Hello, World!" in the terminal. 
+% ------------------------------------------------------------
+% AUTHOR BLOCK
+% ------------------------------------------------------------
+{\fontsize{14}{18}\selectfont
+Prepared by
+\par}
 
-\begin{itemize}
-    \item \texttt{std::cout}: The standard output stream object that sends data to the console.
-    \item \texttt{<<}: The stream insertion operator that directs data into the output stream.
-    \item \texttt{"Hello, World!"}: The string literal to be displayed.
-    \item \texttt{<< std::endl;}: Inserts a newline character and flushes the output buffer.
-\end{itemize}
+\vspace{0.35cm}
 
-\subsubsection{Return Statement - return 0;}
+{\fontsize{23}{28}\selectfont\bfseries
+Chabod Masere
+\par}
 
-The return 0; statement concludes the main function, sending a status code of 0 to the operating system to signify successful execution (zero errors).
+\vspace{0.6cm}
 
+\vfill
 
-\subsection{Development Cycle: Translating Code to Execution}
-The step-by-step execution pattern to  write C++ code is as follows:
+% ------------------------------------------------------------
+% DOCUMENT TYPE BLOCK
+% ------------------------------------------------------------
+{\fontsize{13}{17}\selectfont\bfseries
+Personal Study Notes
+\par}
 
-\subsubsection{\textbf{Write the source code:} \textnormal{Start by writing the C++ code, which outlines the logic of the program.}}
+\vspace{0.35cm}
 
-\subsubsection{\textbf{Compilation:} {\normalfont The compiler translates the source code into machine code. This process involves checking for syntax errors and generating an object file.}}
+{\fontsize{13}{17}\selectfont
+\today
+\par}
 
-\subsubsection{\textbf{Linking:} {\normalfont This stage combines object files into a single executable. It resolves function calls and dependencies to create a cohesive application.}}
+\vspace*{1.2cm}
 
-\subsubsection{\textbf{Execution:} {\normalfont Finally, the executable program runs, performing the tasks defined in the code and producing output on the screen.}}
+\end{titlepage}
 
+\clearpage
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{images/flowchart.png}
-    \label{fig:myimage}
-\end{figure}
+% ============================================================
+% TABLE OF CONTENTS
+% ============================================================
+\tableofcontents
+\clearpage
 
+% ============================================================
+% SECTION I
+% ============================================================
+\section{Introduction to C++}
 
-\subsection{Commenting and Code Organisation}
+\subsection{What is C++?}
 
-Comments are crucial to make code understandable and maintainable. 
+C++ is a general-purpose programming language widely used for systems programming, embedded software, robotics, simulation, game engines, high-performance computing, and engineering applications.
 
-\subsubsection{Single-line Comments (//):} Perfect for brief notes or explanations.
+It provides low-level control over memory and hardware while also supporting high-level programming techniques such as object-oriented programming, generic programming, and abstraction.
 
-\subsubsection{Multi-line Comments (/**/):} Helpful for longer explanations, temporarily removing code blocks, or detailed documentation. 
-
-\subsection{Running a file in the Terminal}
-
-Assume the source file is named \texttt{hello\_world.cpp}. 
-To compile the program using \texttt{g++}, enter the following command in the terminal:
-
-\begin{verbatim}
-g++ hello_world.cpp -o hello_world.exe
-\end{verbatim}
-
-The \texttt{.exe} extension is specific to Windows systems, where executable files use the \texttt{.exe} format.
-
-After successful compilation on Windows, execute the program using:
-
-\begin{verbatim}
-.\hello_world.exe
-\end{verbatim}
-
-Here, the backslash (\texttt{\textbackslash}) indicates execution from the current directory in Windows PowerShell or Command Prompt.
-
-\vspace{0.5em}
-
-On macOS or Linux systems, executables do not use the \texttt{.exe} extension. 
-Instead, compile using:
-
-\begin{verbatim}
-g++ hello_world.cpp -o hello_world
-\end{verbatim}
-
-Then execute the program with:
-
-\begin{verbatim}
-./hello_world
-\end{verbatim}
-
-In this case, the forward slash (\texttt{/}) is used to reference the current directory in Unix-based systems.
-
-Once executed, the program output will be displayed in the terminal.
-
-\subsection{Activity}
-\subsubsection{Creating the Basic Structure of a C++ Program}
-
-In this activity, you will create the basic structure of your C++ program.
-
-\begin{enumerate}
-    \item \textbf{Create a new file:}  
-    Create a new file named \texttt{personal\_intro.cpp}.
-    
-    \item \textbf{Add headers and main function:}  
-    Add the necessary header files and create a \texttt{main()} function.
-\end{enumerate}
-
-\lstinputlisting[language=C++]{Code Overlay/labmodule.cpp}
-
-\subsubsection{Adding Comments to Your Program}
-
-Good developers always document their code. In this activity, you will add comments to describe what your program does.
-
-\lstinputlisting[language=C++]{Code Overlay/labmodule2.cpp}
-
-\subsubsection{Displaying Information}
-
-In this step, you will modify your program to display basic personal information.
-
-\begin{enumerate}
-    \item \textbf{Display your details:}  
-    Inside the \texttt{main()} function, add code to display your name and current role or occupation.
-\end{enumerate}
-
-\lstinputlisting[language=C++]{Code Overlay/labmodule3.cpp}
-
-\subsubsection{Formatting Text Output}
-
-To make it visually more appealing by adding some formatting, the aforementioned code could be seen as: 
-
-\lstinputlisting[language=C++]{Code Overlay/labmodule4.cpp}
-
-\newpage
-\section{C++ Program Structure}
-\subsection{The Impact of Program Structure on Code Quality}
-
-A simple \texttt{Hello, World!} example illustrates the fundamental structure of a \texttt{C++} program. 
-
-At the top of the file, it is standard practice to include the required header files using \textit{preprocessor directives}. For example:
-
-\begin{verbatim}
-#include <iostream>
-\end{verbatim}
-
-A preprocessor directive is an instruction handled by the \texttt{g++} compiler \textit{before} the actual compilation stage begins. The preprocessor modifies the source code by including or transforming text as specified. 
-
-In this case, \texttt{\#include <iostream>} instructs the compiler to include the \texttt{iostream} header from the C++ standard library. This header provides access to input and output stream objects such as \texttt{std::cout} and \texttt{std::cin}. Without this inclusion, the program would not recognize these identifiers and compilation would fail.
-
-Header files are conventionally placed at the beginning of the source file. Placing them elsewhere in the program can lead to compilation errors or undefined references, since the compiler must process these declarations before encountering any code that depends on them.
-
-\subsection{The \texttt{main()} Function and Program Execution}
-
-The \texttt{main()} function is the entry point of every standard \texttt{C++} program. Execution begins at this function and proceeds sequentially, line by line, unless control flow statements alter that order.
-
-The function name must be written in lowercase as \texttt{main}. Any change in capitalisation (for example, \texttt{Main} or \texttt{MAIN}) will result in a compilation error because the compiler requires the exact identifier \texttt{main} as the program entry point.
-
-In hosted environments, the correct signature is:
-
-\begin{verbatim}
-int main()
-\end{verbatim}
-
-The return type must be \texttt{int}. The integer returned provides a status code to the operating system. A return value of \texttt{0} conventionally indicates successful execution. Using \texttt{void main()} is not compliant with the C++ standard and may fail to compile depending on the compiler and configuration.
-
-Execution proceeds sequentially. For example:
-
-\begin{verbatim}
-int main() {
-    return 0;
-    std::cout << "Hello World" << std::endl;
+\conceptbox{
+C++ is powerful because it allows direct control over computation, memory, and performance. This makes it useful for engineering systems where speed, reliability, and hardware-level control matter.
 }
-\end{verbatim}
 
-This program will compile, but the output statement will never execute because \texttt{return 0;} immediately terminates the function. Any statements placed after the return statement are unreachable.
+\subsection{Why Learn C++?}
 
-\subsection{Scope Resolution Operator and Namespaces}
-
-The symbol \texttt{::} is known as the \textit{scope resolution operator}. It specifies the namespace or class scope to which an identifier belongs.
-
-When including the \texttt{<iostream>} header, the input and output stream objects are defined inside the \texttt{std} namespace. Therefore, we must explicitly qualify them:
-
-\begin{verbatim}
-std::cout << "Hello World" << std::endl;
-\end{verbatim}
-
-Here, \texttt{std::} tells the compiler that \texttt{cout} and \texttt{endl} are defined within the standard namespace.
-
-An alternative approach is to use a namespace directive:
-
-\begin{verbatim}
-using namespace std;
-\end{verbatim}
-
-This allows direct access to \texttt{cout} and \texttt{endl} without prefixing them with \texttt{std::}. While convenient for small programs and beginner examples, explicitly qualifying with \texttt{std::} is generally preferred in larger projects to avoid namespace collisions.
-
-\lstinputlisting[language=C++]{Code Overlay/labmodule5.cpp}
-
-\subsection{The Stream Insertion Operator}
-
-The operator \texttt{<<} is known as the \textit{stream insertion operator}. In the context of output operations, it sends data to an output stream.
-
-For example:
-
-\begin{verbatim}
-std::cout << "Hello, World";
-\end{verbatim}
-
-Here, the string literal \texttt{"Hello, World"} is inserted into the output stream object \texttt{std::cout}. The object \texttt{std::cout} represents the standard output stream, which is typically connected to the terminal.
-
-Conceptually, the operator transfers the data on its right-hand side into the stream object on its left-hand side. Multiple insertions can be chained together because the operator returns a reference to the stream:
-
-\begin{verbatim}
-std::cout << "Hello, World" << std::endl;
-\end{verbatim}
-
-In this case, the string is first sent to the output stream, followed by \texttt{std::endl}, which inserts a newline character and flushes the stream buffer.
-
-
-\subsection{Variable Declaration and Assignment}
-
-In \texttt{C++}, variables must be declared before they are used. A declaration informs the compiler of the variable’s type and identifier.
-
-For example:
-
-\begin{verbatim}
-int zero = 0;
-\end{verbatim}
-
-Here:
+C++ is valuable because it develops a strong understanding of:
 
 \begin{itemize}
-    \item \texttt{int} specifies the data type. It tells the compiler that the variable will store an integer value.
-    \item \texttt{zero} is the name (identifier) of the variable.
-    \item The symbol \texttt{=} is the assignment operator. It assigns a value to the variable.
-    \item \texttt{0} is the integer value being stored.
+    \item Program structure
+    \item Compilation and linking
+    \item Memory management
+    \item Data types
+    \item Functions
+    \item Object-oriented programming
+    \item Performance-aware software design
+    \item Embedded and robotics software foundations
 \end{itemize}
 
-Once declared and initialised, the variable can be used within its scope. For example:
+\important{
+C++ gives the programmer significant control, but that control also creates responsibility. Poor memory management, invalid pointers, and unsafe assumptions can create serious bugs.
+}
 
-\begin{verbatim}
+% ============================================================
+% SECTION II
+% ============================================================
+\section{Basic Program Structure}
+
+\subsection{Hello World}
+
+\begin{lstlisting}[caption={Hello World in C++}]
+#include <iostream>
+
+int main() {
+    std::cout << "Hello, World!" << std::endl;
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Program Explanation}
+
+The basic C++ program contains several important parts:
+
+\begin{itemize}
+    \item \texttt{\#include <iostream>} includes the standard input-output stream library.
+    \item \texttt{int main()} defines the entry point of the program.
+    \item \texttt{std::cout} sends output to the terminal.
+    \item \texttt{<<} is the stream insertion operator.
+    \item \texttt{std::endl} inserts a newline and flushes the output stream.
+    \item \texttt{return 0;} indicates successful program execution.
+\end{itemize}
+
+\examplebox{
+Every standard C++ program begins execution from the \texttt{main()} function.
+}
+
+% ============================================================
+% SECTION III
+% ============================================================
+\section{Compilation and Execution}
+
+\subsection{The Development Cycle}
+
+The C++ development cycle usually follows this process:
+
+\begin{enumerate}
+    \item Write the source code.
+    \item Compile the source file.
+    \item Link object files and libraries.
+    \item Produce an executable.
+    \item Run the program.
+    \item Debug and improve the code.
+\end{enumerate}
+
+\conceptbox{
+Compilation translates human-readable C++ source code into machine-level instructions that the computer can execute.
+}
+
+\subsection{Compiling on Windows}
+
+Assume the source file is named \texttt{hello\_world.cpp}.
+
+\begin{lstlisting}[caption={Compile C++ on Windows}]
+g++ hello_world.cpp -o hello_world.exe
+\end{lstlisting}
+
+Run the executable:
+
+\begin{lstlisting}[caption={Run Executable on Windows}]
+.\hello_world.exe
+\end{lstlisting}
+
+\subsection{Compiling on macOS or Linux}
+
+\begin{lstlisting}[caption={Compile C++ on macOS or Linux}]
+g++ hello_world.cpp -o hello_world
+\end{lstlisting}
+
+Run the executable:
+
+\begin{lstlisting}[caption={Run Executable on macOS or Linux}]
+./hello_world
+\end{lstlisting}
+
+\important{
+Windows commonly uses the \texttt{.exe} executable extension. macOS and Linux executables typically do not require this extension.
+}
+
+% ============================================================
+% SECTION IV
+% ============================================================
+\section{Preprocessor Directives and Headers}
+
+\subsection{The Include Directive}
+
+The line:
+
+\begin{lstlisting}[caption={Include Directive}]
+#include <iostream>
+\end{lstlisting}
+
+instructs the preprocessor to include the standard input-output stream library before compilation.
+
+This allows the program to use objects such as:
+
+\begin{itemize}
+    \item \texttt{std::cout}
+    \item \texttt{std::cin}
+    \item \texttt{std::endl}
+\end{itemize}
+
+\subsection{Header Files}
+
+Header files provide declarations for functions, classes, constants, and objects used by the program.
+
+Common C++ headers include:
+
+\begin{table}[H]
+\centering
+\caption{Common C++ Header Files}
+\begin{tabular}{ll}
+\toprule
+Header & Purpose \\
+\midrule
+\texttt{<iostream>} & Console input and output \\
+\texttt{<string>} & String objects \\
+\texttt{<vector>} & Dynamic arrays \\
+\texttt{<cmath>} & Mathematical functions \\
+\texttt{<fstream>} & File input and output \\
+\texttt{<algorithm>} & Common algorithms \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+% SECTION V
+% ============================================================
+\section{Namespaces and Output}
+
+\subsection{The Standard Namespace}
+
+The C++ standard library places many features inside the \texttt{std} namespace.
+
+\begin{lstlisting}[caption={Using std Namespace Explicitly}]
+#include <iostream>
+
+int main() {
+    std::cout << "Learning C++" << std::endl;
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Scope Resolution Operator}
+
+The symbol \texttt{::} is the scope resolution operator. It tells the compiler where an identifier belongs.
+
+For example:
+
+\begin{lstlisting}[caption={Scope Resolution Operator}]
+std::cout
+std::endl
+\end{lstlisting}
+
+means that \texttt{cout} and \texttt{endl} belong to the \texttt{std} namespace.
+
+\subsection{Using Namespace std}
+
+\begin{lstlisting}[caption={Using Namespace std}]
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    cout << "Learning C++" << endl;
+    return 0;
+}
+\end{lstlisting}
+
+\important{
+Using \texttt{std::} explicitly is usually better in larger projects because it avoids namespace collisions.
+}
+
+% ============================================================
+% SECTION VI
+% ============================================================
+\section{Variables and Data Types}
+
+\subsection{Variable Declaration}
+
+A variable must be declared before it is used.
+
+\begin{lstlisting}[caption={Integer Variable}]
+#include <iostream>
+
 int main() {
     int zero = 0;
-    return zero;
-}
-\end{verbatim}
-
-In this case, \texttt{return zero;} returns the value stored in the variable \texttt{zero}. 
-
-If a variable is referenced before it is declared, the program will fail to compile because the compiler has no prior knowledge of its type or existence.
-
-\lstinputlisting[language=C++]{Code Overlay/labmodule6.cpp}
-
-\newpage
-We can also represent non-integer values. Here is an example of double-precision floating-point data. 
-
-
-\lstinputlisting[language=C++]{Code Overlay/labmodule7.cpp}
-
-\subsection{Coding Standards}
-
-Code is read far more often than it is written. For this reason, coding standards play a critical role in software development. Adhering to consistent formatting, naming conventions, and structural guidelines improves readability and reduces cognitive load for anyone reviewing or maintaining the code.
-
-Standardised practices promote clarity and uniformity across a codebase. This is particularly important in professional environments, where multiple developers contribute to the same project. Consistent indentation, meaningful variable names, logical file organisation, and clear commenting conventions make it easier for collaborators to understand program intent and behaviour.
-
-Readable and maintainable code forms the foundation for scalability. As systems grow in size and complexity, poorly structured code becomes increasingly difficult to modify, debug, or extend. In contrast, a well-structured program encourages reuse, simplifies testing, and supports long-term evolution of the software. Clear coding standards therefore improve not only individual productivity but also the effectiveness of team-based engineering efforts.
-
-\subsection{Functions, Return Values, and Comments}
-
-In \texttt{C++}, a function is a reusable block of code designed to perform a specific task. A function must have:
-
-\begin{itemize}
-    \item A return type (e.g.\ \texttt{int})
-    \item A function name (identifier)
-    \item Parentheses \texttt{()} for parameters
-    \item Curly braces \texttt{\{\}} defining the function body
-\end{itemize}
-
-For example:
-
-\begin{verbatim}
-// Greets the user and returns i + 10
-int greetUser(int i) {
-    std::cout << "Hello, World!" << std::endl;
-    return i + 10;
-}
-\end{verbatim}
-
-Here:
-
-\begin{itemize}
-    \item \texttt{int} is the return type.
-    \item \texttt{greetUser} is the function name.
-    \item \texttt{(int i)} declares a parameter of type integer.
-    \item The braces contain the executable statements.
-\end{itemize}
-
-When a function is called, execution transfers to that function and proceeds sequentially, line by line. After completing its statements, the function returns a value specified by the \texttt{return} statement.
-
-In the \texttt{main()} function:
-
-\begin{verbatim}
-int main() {
-    int result = greetUser(32);
-    std::cout << "Function returned: " << result << std::endl;
+    std::cout << zero << std::endl;
     return 0;
 }
-\end{verbatim}
+\end{lstlisting}
 
-The function call \texttt{greetUser(32)} sends the integer \texttt{32} as an argument. Inside the function, this value is assigned to the parameter \texttt{i}. The function then returns \texttt{i + 10}, which evaluates to \texttt{42}. That return value is stored in the variable \texttt{result}, and subsequently printed to the terminal.
+A declaration tells the compiler:
 
-When evaluating a function call, its value is defined by what the function returns. In this case:
+\begin{itemize}
+    \item The variable type
+    \item The variable name
+    \item The value being stored
+\end{itemize}
 
-\[
-\texttt{result} = 32 + 10 = 42
-\]
+\subsection{Common Data Types}
 
-\lstinputlisting[language=C++]{Code Overlay/module.cpp}
+\begin{table}[H]
+\centering
+\caption{Common C++ Data Types}
+\begin{tabular}{lll}
+\toprule
+Type & Example & Description \\
+\midrule
+\texttt{int} & \texttt{42} & Whole number \\
+\texttt{double} & \texttt{3.14159} & Double-precision decimal \\
+\texttt{float} & \texttt{2.5f} & Single-precision decimal \\
+\texttt{char} & \texttt{'A'} & Single character \\
+\texttt{bool} & \texttt{true} & Boolean value \\
+\texttt{std::string} & \texttt{"Hello"} & Text string \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\subsection{Comments in C++}
+\subsection{String Example}
 
-Comments are non-executable statements intended to describe the purpose or behaviour of code. They are ignored by the compiler.
+\begin{lstlisting}[caption={String Variable}]
+#include <iostream>
+#include <string>
 
-A single-line comment begins with:
+int main() {
+    std::string name = "Chabod";
+    std::cout << "Name: " << name << std::endl;
+    return 0;
+}
+\end{lstlisting}
 
-\begin{verbatim}
-// This is a comment
-\end{verbatim}
+% ============================================================
+% SECTION VII
+% ============================================================
+\section{Operators}
 
-Comments improve readability, clarify intent, and support maintainability. Well-written comments help future developers understand design decisions, expected behaviour, and potential edge cases. While code should be self-explanatory through clear naming and structure, comments provide additional context where necessary.
+\subsection{Arithmetic Operators}
 
+\begin{table}[H]
+\centering
+\caption{Arithmetic Operators}
+\begin{tabular}{lll}
+\toprule
+Operator & Name & Example \\
+\midrule
+\texttt{+} & Addition & \texttt{a + b} \\
+\texttt{-} & Subtraction & \texttt{a - b} \\
+\texttt{*} & Multiplication & \texttt{a * b} \\
+\texttt{/} & Division & \texttt{a / b} \\
+\texttt{\%} & Modulus & \texttt{a \% b} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
+\subsection{Assignment Operator}
 
+\begin{lstlisting}[caption={Assignment Example}]
+int speed = 25;
+speed = 30;
+\end{lstlisting}
 
+\subsection{Comparison Operators}
 
+\begin{lstlisting}[caption={Comparison Operators}]
+int a = 10;
+int b = 20;
 
+bool result1 = a == b;
+bool result2 = a < b;
+bool result3 = a != b;
+\end{lstlisting}
 
+% ============================================================
+% SECTION VIII
+% ============================================================
+\section{Control Flow}
 
+\subsection{If Statements}
 
+\begin{lstlisting}[caption={If Statement}]
+#include <iostream>
 
+int main() {
+    int battery = 75;
 
+    if (battery > 50) {
+        std::cout << "Battery level is sufficient." << std::endl;
+    } else {
+        std::cout << "Battery level is low." << std::endl;
+    }
 
+    return 0;
+}
+\end{lstlisting}
 
+\subsection{For Loop}
 
+\begin{lstlisting}[caption={For Loop}]
+#include <iostream>
 
+int main() {
+    for (int i = 0; i < 5; i++) {
+        std::cout << "Step: " << i << std::endl;
+    }
 
+    return 0;
+}
+\end{lstlisting}
 
+\subsection{While Loop}
 
+\begin{lstlisting}[caption={While Loop}]
+#include <iostream>
 
+int main() {
+    int altitude = 0;
 
+    while (altitude < 100) {
+        altitude += 20;
+        std::cout << "Altitude: " << altitude << " m" << std::endl;
+    }
 
+    return 0;
+}
+\end{lstlisting}
 
+% ============================================================
+% SECTION IX
+% ============================================================
+\section{Functions}
 
+\subsection{Basic Function}
 
+\begin{lstlisting}[caption={Basic Function}]
+#include <iostream>
 
+void greetUser() {
+    std::cout << "Hello from a function." << std::endl;
+}
 
+int main() {
+    greetUser();
+    return 0;
+}
+\end{lstlisting}
 
+\subsection{Function with Parameters}
 
+\begin{lstlisting}[caption={Function with Parameters}]
+#include <iostream>
 
+void printSpeed(int speed) {
+    std::cout << "Speed: " << speed << " m/s" << std::endl;
+}
 
+int main() {
+    printSpeed(45);
+    return 0;
+}
+\end{lstlisting}
 
+\subsection{Function with Return Value}
 
+\begin{lstlisting}[caption={Function with Return Value}]
+#include <iostream>
 
+int square(int x) {
+    return x * x;
+}
 
+int main() {
+    int result = square(5);
+    std::cout << "Result: " << result << std::endl;
+    return 0;
+}
+\end{lstlisting}
 
+\conceptbox{
+A function is a reusable block of code that performs a specific task. It improves structure, readability, and maintainability.
+}
 
+% ============================================================
+% SECTION X
+% ============================================================
+\section{Arrays and Vectors}
 
+\subsection{Arrays}
 
+\begin{lstlisting}[caption={Array Example}]
+#include <iostream>
 
+int main() {
+    int sensorValues[4] = {10, 20, 30, 40};
 
-\newpage
-\subsection{Data Types and Variables in C++}
-\subsection{Operators and Control Flow}
-\subsection{Code Creation and Compilation}
-\subsection{Hands-On Course Project}
+    std::cout << sensorValues[0] << std::endl;
 
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Vectors}
+
+Vectors are dynamic arrays provided by the C++ standard library.
+
+\begin{lstlisting}[caption={Vector Example}]
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> values = {10, 20, 30};
+
+    values.push_back(40);
+
+    for (int value : values) {
+        std::cout << value << std::endl;
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\important{
+Arrays have fixed size. Vectors can grow and shrink dynamically, making them more flexible for most modern C++ programs.
+}
+
+% ============================================================
+% SECTION XI
+% ============================================================
+\section{Pointers and References}
+
+\subsection{References}
+
+A reference is an alias for another variable.
+
+\begin{lstlisting}[caption={Reference Example}]
+#include <iostream>
+
+int main() {
+    int speed = 50;
+    int& speedRef = speed;
+
+    speedRef = 60;
+
+    std::cout << speed << std::endl;
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Pointers}
+
+A pointer stores the memory address of another variable.
+
+\begin{lstlisting}[caption={Pointer Example}]
+#include <iostream>
+
+int main() {
+    int speed = 50;
+    int* ptr = &speed;
+
+    std::cout << "Value: " << speed << std::endl;
+    std::cout << "Address: " << ptr << std::endl;
+    std::cout << "Dereferenced value: " << *ptr << std::endl;
+
+    return 0;
+}
+\end{lstlisting}
+
+\important{
+Pointers are powerful but dangerous if used incorrectly. Invalid pointers, dangling pointers, and memory leaks are common sources of C++ bugs.
+}
+
+% ============================================================
+% SECTION XII
+% ============================================================
+\section{Object-Oriented Programming}
+
+\subsection{Classes}
+
+A class groups data and behaviour into one structure.
+
+\begin{lstlisting}[caption={Class Example}]
+#include <iostream>
+#include <string>
+
+class UAV {
+public:
+    std::string name;
+    double mass;
+
+    void printInfo() {
+        std::cout << name << " has mass " << mass << " kg." << std::endl;
+    }
+};
+
+int main() {
+    UAV aircraft;
+    aircraft.name = "Test UAV";
+    aircraft.mass = 2.5;
+
+    aircraft.printInfo();
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Constructors}
+
+A constructor initializes an object when it is created.
+
+\begin{lstlisting}[caption={Constructor Example}]
+#include <iostream>
+#include <string>
+
+class UAV {
+public:
+    std::string name;
+    double mass;
+
+    UAV(std::string n, double m) {
+        name = n;
+        mass = m;
+    }
+
+    void printInfo() {
+        std::cout << name << " has mass " << mass << " kg." << std::endl;
+    }
+};
+
+int main() {
+    UAV aircraft("Quadrotor", 1.8);
+    aircraft.printInfo();
+
+    return 0;
+}
+\end{lstlisting}
+
+% ============================================================
+% SECTION XIII
+% ============================================================
+\section{Structs}
+
+\subsection{Struct Example}
+
+Structs are useful for grouping related data.
+
+\begin{lstlisting}[caption={Struct Example}]
+#include <iostream>
+#include <string>
+
+struct Motor {
+    std::string model;
+    double thrust;
+    double voltage;
+};
+
+int main() {
+    Motor motor = {"AXI-2212", 12.5, 11.1};
+
+    std::cout << "Motor: " << motor.model << std::endl;
+    std::cout << "Thrust: " << motor.thrust << " N" << std::endl;
+
+    return 0;
+}
+\end{lstlisting}
+
+\conceptbox{
+In C++, structs and classes are very similar. The main default difference is that struct members are public by default, while class members are private by default.
+}
+
+% ============================================================
+% SECTION XIV
+% ============================================================
+\section{File Input and Output}
+
+\subsection{Writing to a File}
+
+\begin{lstlisting}[caption={Write to File}]
+#include <fstream>
+
+int main() {
+    std::ofstream file("output.txt");
+
+    file << "C++ file output example." << std::endl;
+
+    file.close();
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Reading from a File}
+
+\begin{lstlisting}[caption={Read from File}]
+#include <iostream>
+#include <fstream>
+#include <string>
+
+int main() {
+    std::ifstream file("output.txt");
+    std::string line;
+
+    while (std::getline(file, line)) {
+        std::cout << line << std::endl;
+    }
+
+    file.close();
+
+    return 0;
+}
+\end{lstlisting}
+
+% ============================================================
+% SECTION XV
+% ============================================================
+\section{Coding Standards}
+
+\subsection{Why Coding Standards Matter}
+
+Code is read far more often than it is written. Clear formatting, consistent naming, and logical structure make programs easier to understand, debug, and maintain.
+
+Good coding standards include:
+
+\begin{itemize}
+    \item Clear variable names
+    \item Consistent indentation
+    \item Short, focused functions
+    \item Meaningful comments
+    \item Proper file organisation
+    \item Avoiding unnecessary complexity
+\end{itemize}
+
+\subsection{Comments}
+
+Single-line comments use:
+
+\begin{lstlisting}[caption={Single-Line Comment}]
+// This is a single-line comment
+\end{lstlisting}
+
+Multi-line comments use:
+
+\begin{lstlisting}[caption={Multi-Line Comment}]
+/*
+This is a multi-line comment.
+It can span several lines.
+*/
+\end{lstlisting}
+
+\important{
+Comments should explain intent, not repeat obvious code. Good code should be readable first; comments should add context where needed.
+}
+
+% ============================================================
+% SECTION XVI
+% ============================================================
+\section{Personal Learning Log}
+
+\subsection{Concepts I Need to Review}
+
+\begin{itemize}
+    \item Compilation and linking
+    \item Header files
+    \item Namespaces
+    \item Functions
+    \item References
+    \item Pointers
+    \item Classes
+    \item Constructors
+    \item Destructors
+    \item Memory allocation
+    \item Smart pointers
+    \item Templates
+    \item Standard Template Library
+\end{itemize}
+
+\subsection{Mistakes to Avoid}
+
+\begin{itemize}
+    \item Forgetting semicolons at the end of statements.
+    \item Forgetting to include required header files.
+    \item Confusing \texttt{=} with \texttt{==}.
+    \item Using variables before declaring them.
+    \item Returning from \texttt{main()} before code has executed.
+    \item Using pointers without understanding memory addresses.
+    \item Forgetting that arrays use zero-based indexing.
+    \item Overusing \texttt{using namespace std;} in larger projects.
+\end{itemize}
+
+\subsection{Key Mental Model}
+
+\conceptbox{
+C++ is not just about syntax. It is about understanding how source code becomes an executable program, how memory is represented, and how software interacts with hardware-level behaviour.
+}
+
+\subsection{Questions to Answer Later}
+
+\begin{itemize}
+    \item When should I use references instead of pointers?
+    \item When should I use a class instead of a struct?
+    \item How does dynamic memory allocation work?
+    \item What are smart pointers and when should I use them?
+    \item How do templates work?
+    \item How does C++ support robotics and embedded systems?
+    \item How do I structure large C++ projects professionally?
+\end{itemize}
+
+% ============================================================
+% END DOCUMENT
+% ============================================================
 \end{document}
+
